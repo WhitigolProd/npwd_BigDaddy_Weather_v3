@@ -1,32 +1,18 @@
-let isFocused = false;
-const exps = global.exports
+const exps = global.exports;
 
-RegisterCommand(
-  'focus',
-  () => {
-    if (isFocused) {
-      SetNuiFocus(false, false);
-      SetNuiFocusKeepInput(false);
-      isFocused = false;
-      return;
-    }
+setTick(async () => {
+  while (true) {
+    emitNet('w.npwd_BigDaddy_Weather:RequestWeather', GetPlayerServerId(PlayerId()));
+    await new Promise((resolve) => setTimeout(resolve, 1000));
+  }
+});
 
-    //SendNUIMessage({ type: 'RANDOM', payload: 'Hello from client' });
-    global.exports["npwd"].sendUIMessage('RANDOM', 'Hello from client');
-
-    SetNuiFocusKeepInput(true);
-    SetNuiFocus(true, true);
-    isFocused = true;
-  },
-  false
-);
-
-RegisterCommand(
-  'unfocus',
-  () => {
-    SetNuiFocus(false, false);
-  },
-  false
-);
-
-RegisterKeyMapping('focus', 'Toggle Phone', 'keyboard', 'n');
+onNet('w.npwd_BigDaddy_Weather:SendWeather', (weather: any[]) => {
+  SendNuiMessage(
+    JSON.stringify({
+      app: 'npwd_BigDaddy_Weather',
+      method: 'forecast',
+      data: weather,
+    }),
+  );
+});

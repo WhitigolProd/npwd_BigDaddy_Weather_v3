@@ -6,7 +6,4 @@ server_script 'dist/server.js'
 
 ui_page 'web/dist/index.html'
 
-files {
-    'web/dist/index.html',
-    'web/dist/*.js',
-}
+files {'web/dist/index.html', 'web/dist/**/*'}

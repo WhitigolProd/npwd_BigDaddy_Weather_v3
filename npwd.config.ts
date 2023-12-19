@@ -5,11 +5,11 @@ interface Settings {
   language: 'en';
 }
 
-export const path = '/mockapp';
+export const path = '/npwd_BigDaddy_Weather';
 export default (settings: Settings) => ({
-  id: 'MOCKAPP',
+  id: 'Weather',
   path,
-  nameLocale: "Mockapp", 
+  nameLocale: 'Weather',
   color: '#fff',
   backgroundColor: '#333',
   icon: AppIcon,

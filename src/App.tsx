@@ -1,20 +1,17 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 import { i18n } from 'i18next';
-import {
-  Theme,
-  Paper,
-  Typography,
-  BottomNavigation,
-  BottomNavigationAction,
-  StyledEngineProvider
-} from '@mui/material';
-import Header, { HEADER_HEIGHT } from './components/Header';
+import { Theme, Paper, StyledEngineProvider, Icon } from '@mui/material';
+import Header from './components/Header';
 import styled from '@emotion/styled';
-import {  Link, NavLink, useHistory, useLocation } from 'react-router-dom';
-import { path } from '../npwd.config';
-import { HomeRounded, InfoRounded } from '@mui/icons-material';
 import ThemeSwitchProvider from './ThemeSwitchProvider';
+import './globals.css';
+import { NuiProvider, useNuiEvent } from 'fivem-nui-react-lib';
+import { useWeather } from './hooks/useWeather';
+import { RecoilRoot, useRecoilState } from 'recoil';
+import type { WeatherExport } from './types/validWeather';
+import selectWeatherImage from './utils/selectWeatherImage';
+import weatherText from './utils/weatherText';
 
 const Container = styled(Paper)`
   flex: 1;
@@ -24,24 +21,13 @@ const Container = styled(Paper)`
   max-height: 100%;
 `;
 
-const LinkItem = styled(Link)`
-  font-family: sans-serif;
-  text-decoration: none;
-`;
-
-
 const Content = styled.div`
   flex: 1;
   display: flex;
   flex-direction: column;
   box-sizing: border-box;
   padding: 1.5rem;
-  max-height: calc(100% - 3.5rem - ${HEADER_HEIGHT});
   overflow: auto;
-`;
-
-const Footer = styled.footer`
-  margin-top: auto;
 `;
 
 interface AppProps {
@@ -51,81 +37,41 @@ interface AppProps {
 }
 
 function App(props: AppProps) {
-  const history = useHistory();
-  const { pathname } = useLocation();
+  const { weather, setWeather } = useWeather();
+  useNuiEvent('npwd_BigDaddy_Weather', 'forecast', setWeather);
 
-  const [page, setPage] = useState(pathname);
+  const weatherItems = weather.map((item, index) => {
+    return (
+      <div
+        key={index}
+        className="flex flex-row items-center gap-3 w-full h-full bg-black/50 rounded-2xl p-4"
+      >
+        <img src={selectWeatherImage(item.weather)} className="w-16 h-16" />
+        <span className="text-4xl mr-2">•</span>
+        <div className="flex flex-col justify-center gap-1">
+          <span className="text-3xl font-extrabold">{item.temp}&deg;</span>
+          <span className="text-lg font-semibold">{weatherText(item.weather)}</span>
+        </div>
+      </div>
+    );
+  });
 
-  const handleChange = (_e: any, newPage: any) => {
-    setPage(newPage);
-  };
-
-  console.log("MOCK APP PROPS", props)
-
-  console.log("meta env", import.meta.env)
-  console.log("meta env in game", import.meta.env.VITE_REACT_APP_IN_GAME)
-  console.log("env in game", process.env.VITE_REACT_APP_IN_GAME)
-
-  console.log("is prod", import.meta.env.PROD)
-
-  console.log("meta env mode", import.meta.env.MODE)
   return (
     <StyledEngineProvider injectFirst>
-      <ThemeSwitchProvider mode='dark'>
-      <Container square elevation={0}>
-          <Header>Template app</Header>
+      <ThemeSwitchProvider mode="dark">
+        <Container square elevation={0} className="bg-gradient-to-br from-blue-500 to-blue-600">
+          <Header>Big Daddy's Forecast</Header>
           <Content>
-            <div>
-              <h1>Template app - Heading 1</h1>
-
-              <h3>You are at {pathname}</h3>
-
-              <h2>Hello world ok good nice</h2>
-
-              {import.meta.env.MODE === 'game' && (
-                <h3>Running in game</h3>
-              )}
-
-              <button onClick={history.goBack}>
-                Back to home
-              </button>
+            <div className="flex flex-col items-center justify-center w-full h-full gap-2">
+              {weatherItems ? weatherItems : <Icon className="text-6xl animate-spin">refresh</Icon>}
             </div>
-
-
-            <Footer>
-              <LinkItem to="/">
-                <Typography>Home</Typography>
-              </LinkItem>
-            </Footer>
           </Content>
-
-          <BottomNavigation value={page} onChange={handleChange} showLabels>
-          <BottomNavigationAction
-              label={'Home'}
-              value="/home"
-              icon={<HomeRounded />}
-              component={NavLink}
-              to={path}
-            />
-            <BottomNavigationAction
-              label={'About'}
-              value="/about"
-              color="secondary"
-              icon={<InfoRounded />}
-              component={NavLink}
-              to={path}
-            />
-          </BottomNavigation>
-
         </Container>
       </ThemeSwitchProvider>
-  
-      </StyledEngineProvider>
+    </StyledEngineProvider>
   );
-};
+}
 
 export default function WithProviders(props: AppProps) {
-  return (
-    <App {...props} />
-  )
+  return <App {...props} />;
 }

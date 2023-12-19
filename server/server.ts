@@ -1,8 +1,12 @@
-const hotReloadConfig = {
-  resourceName: GetCurrentResourceName(),
-  files: ['/dist/server.js', '/dist/client.js', '/dist/html/index.js'],
+type WeatherExport = {
+  weather: string;
+  temp: number;
 };
 
-exports['hotreload'].add(hotReloadConfig);
+onNet('w.npwd_BigDaddy_Weather:RequestWeather', (playerId: number) => {
+  const forecast: WeatherExport[] = exports['BigDaddy-Weather']['ExportForecast']();
 
-console.log('Server started.');
+  const weather = forecast.slice(0, 6);
+
+  emitNet('w.npwd_BigDaddy_Weather:SendWeather', playerId, weather);
+});
