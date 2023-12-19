@@ -73,5 +73,9 @@ function App(props: AppProps) {
 }
 
 export default function WithProviders(props: AppProps) {
-  return <App {...props} />;
+  return (
+    <NuiProvider resource="npwd_BigDaddy_Weather">
+      <App {...props} />
+    </NuiProvider>
+  );
 }
