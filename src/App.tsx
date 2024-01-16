@@ -52,12 +52,12 @@ export function App(props: AppProps) {
 					</Header>
 					<Content>
 						<div className="w-full h-full flex flex-col gap-3 items-center">
-							<WeatherCard weather="SNOWLIGHT" temp={69} />
-							<WeatherCard weather="CLEAR" temp={69} />
-							<WeatherCard weather="CLEARING" temp={69} />
-							<WeatherCard weather="OVERCAST" temp={69} />
-							<WeatherCard weather="CLEARING" temp={69} />
-							<WeatherCard weather="THUNDER" temp={69} />
+							<WeatherCard weather="BLIZZARD" temp={-10} />
+							<WeatherCard weather="BLIZZARD" temp={-15} />
+							<WeatherCard weather="BLIZZARD" temp={-17} />
+							<WeatherCard weather="BLIZZARD" temp={-9} />
+							<WeatherCard weather="BLIZZARD" temp={-1} />
+							<WeatherCard weather="BLIZZARD" temp={-30} />
 						</div>
 					</Content>
 				</Container>
