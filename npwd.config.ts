@@ -2,16 +2,16 @@ import App from './src/App';
 import { AppIcon } from './icon';
 
 interface Settings {
-  language: 'en';
+	language: 'en';
 }
 
-export const path = '/mockapp';
+export const path = '/npwd_BigDaddy_Weather';
 export default (settings: Settings) => ({
-  id: 'MOCKAPP',
-  path,
-  nameLocale: "Mockapp", 
-  color: '#fff',
-  backgroundColor: '#333',
-  icon: AppIcon,
-  app: App,
+	id: 'npwd_BigDaddy_Weather',
+	path,
+	nameLocale: 'Weather',
+	color: '#fff',
+	backgroundColor: '#333',
+	icon: AppIcon,
+	app: App,
 });

@@ -1,127 +1,75 @@
 import React, { useState } from 'react';
 
 import { i18n } from 'i18next';
-import {
-  Theme,
-  Paper,
-  Typography,
-  BottomNavigation,
-  BottomNavigationAction,
-  StyledEngineProvider,
-} from '@mui/material';
-import Header, { HEADER_HEIGHT } from './components/Header';
+import { Theme, Paper, StyledEngineProvider } from '@mui/material';
+import Header from './components/Header';
 import styled from '@emotion/styled';
-import { Link, NavLink, useHistory, useLocation } from 'react-router-dom';
-import { path } from '../npwd.config';
-import { HomeRounded, InfoRounded } from '@mui/icons-material';
 import ThemeSwitchProvider from './ThemeSwitchProvider';
 import { RecoilRoot } from 'recoil';
 import { useNuiEvent } from './hooks/useNuiEvent';
+import WeatherCard from './components/WeatherCard';
 
 const Container = styled(Paper)`
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  box-sizing: border-box;
-  max-height: 100%;
-`;
-
-const LinkItem = styled(Link)`
-  font-family: sans-serif;
-  text-decoration: none;
+	flex: 1;
+	display: flex;
+	flex-direction: column;
+	box-sizing: border-box;
+	max-height: 100%;
+	background: linear-gradient(-135deg, #0062ff 0%, #478eff 100%);
+	color: white;
 `;
 
 const Content = styled.div`
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  box-sizing: border-box;
-  padding: 1.5rem;
-  max-height: calc(100% - 3.5rem - ${HEADER_HEIGHT});
-  overflow: auto;
-`;
-
-const Footer = styled.footer`
-  margin-top: auto;
+	flex: 1;
+	display: flex;
+	flex-direction: column;
+	box-sizing: border-box;
+	padding: 1.5rem;
+	overflow: auto;
 `;
 
 interface AppProps {
-  theme: Theme;
-  i18n: i18n;
-  settings: any;
+	theme: Theme;
+	i18n: i18n;
+	settings: any;
 }
 
 export function App(props: AppProps) {
-  const history = useHistory();
-  const { pathname } = useLocation();
-  const [nuiData, setNuiData] = useState(null);
+	const [nuiData, setNuiData] = useState(null);
 
-  const [page, setPage] = useState(pathname);
+	useNuiEvent('w_bd_weather', 'setWeather', (data) => {
+		setNuiData(data);
+	});
 
-  useNuiEvent('MOCKAPP', 'setRandomData', (data) => {
-    console.log(data);
-    setNuiData(data);
-  });
-
-  //setPage(newPage);
-  const handleChange = (_e: any, newPage: any) => {};
-
-  return (
-    <StyledEngineProvider injectFirst>
-      <ThemeSwitchProvider mode={props.theme.palette.mode}>
-        <Container square elevation={0}>
-          <Header>Template app</Header>
-          <Content>
-            <div>
-              <h1>Template app - Heading 1</h1>
-              <h3>You are at {pathname}</h3>
-
-              {import.meta.env.MODE === 'game' && <h3>Running in game</h3>}
-
-              <button onClick={history.goBack}>Back to home</button>
-
-              {nuiData && (
-                <div>
-                  <h3>Random data from NUI</h3>
-                  <p>{JSON.stringify(nuiData)}</p>
-                </div>
-              )}
-            </div>
-
-            <Footer>
-              <LinkItem to="/">
-                <Typography>Home</Typography>
-              </LinkItem>
-            </Footer>
-          </Content>
-
-          <BottomNavigation value={page} onChange={handleChange} showLabels>
-            <BottomNavigationAction
-              label={'Home'}
-              value="/home"
-              icon={<HomeRounded />}
-              component={NavLink}
-              to={path}
-            />
-            <BottomNavigationAction
-              label={'About'}
-              value="/about"
-              color="secondary"
-              icon={<InfoRounded />}
-              component={NavLink}
-              to={path}
-            />
-          </BottomNavigation>
-        </Container>
-      </ThemeSwitchProvider>
-    </StyledEngineProvider>
-  );
+	return (
+		<StyledEngineProvider injectFirst>
+			<ThemeSwitchProvider mode={props.theme.palette.mode}>
+				<Container square elevation={0}>
+					<Header>
+						<span className="bdFont text-3xl drop-shadow-[0_1.2px_1.2px_rgba(0,0,0,0.8)]">
+							Big Daddy Weather
+						</span>
+					</Header>
+					<Content>
+						<div className="w-full h-full flex flex-col gap-3 items-center">
+							<WeatherCard weather="SNOWLIGHT" temp={69} />
+							<WeatherCard weather="CLEAR" temp={69} />
+							<WeatherCard weather="CLEARING" temp={69} />
+							<WeatherCard weather="OVERCAST" temp={69} />
+							<WeatherCard weather="CLEARING" temp={69} />
+							<WeatherCard weather="THUNDER" temp={69} />
+						</div>
+					</Content>
+				</Container>
+			</ThemeSwitchProvider>
+		</StyledEngineProvider>
+	);
 }
 
 export default function WithProviders(props: AppProps) {
-  return (
-    <RecoilRoot override key="mockapp">
-      <App {...props} />
-    </RecoilRoot>
-  );
+	return (
+		<RecoilRoot override key="npwd_BigDaddy_Weather">
+			<App {...props} />
+		</RecoilRoot>
+	);
 }

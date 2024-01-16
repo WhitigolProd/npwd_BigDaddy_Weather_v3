@@ -1,0 +1,10 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@font-face{font-family:badaboom bb;font-style:normal;font-weight:400;src:local('BadaBoom BB'),url(https://fonts.cdnfonts.com/s/1758/BADABB__.woff) format('woff')}
+
+.bdFont{
+    font-family: badaboom bb;
+    letter-spacing: 0.01em;
+}

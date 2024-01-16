@@ -1,0 +1,16 @@
+export type ValidWeather =
+	| 'BLIZZARD'
+	| 'CLEAR'
+	| 'CLEARING'
+	| 'CLOUDS'
+	| 'EXTRASUNNY'
+	| 'FOGGY'
+	| 'HALLOWEEN'
+	| 'NEUTRAL'
+	| 'OVERCAST'
+	| 'RAIN'
+	| 'SMOG'
+	| 'SNOW'
+	| 'SNOWLIGHT'
+	| 'THUNDER'
+	| 'XMAS';

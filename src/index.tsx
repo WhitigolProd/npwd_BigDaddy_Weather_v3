@@ -5,7 +5,7 @@
     Anything you put here will NOT get loaded into NPWD.
 */
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import ReactDOM from 'react-dom';
 import '../npwd.config';
 
@@ -18,47 +18,48 @@ import { RecoilRoot } from 'recoil';
 import i18next from 'i18next';
 import { createTheme } from '@mui/material';
 import { lightTheme } from './app.theme';
+import './global.css';
 
 const Container = styled.div`
-  position: relative;
-  width: 500px;
-  height: 1000px;
+	position: relative;
+	width: 500px;
+	height: 1000px;
 `;
 const Background = styled.div<{ src: string }>`
-  background: url(${({ src }) => src});
-  position: absolute;
-  z-index: 100;
-  width: 500px;
-  height: 1000px;
-  pointer-events: none;
+	background: url(${({ src }) => src});
+	position: absolute;
+	z-index: 100;
+	width: 500px;
+	height: 1000px;
+	pointer-events: none;
 `;
 
 const AppContainer = styled.div`
-  z-index: 2;
-  position: absolute;
-  bottom: 100px;
-  left: 50px;
-  right: 50px;
-  top: 100px;
-  display: flex;
-  flex-direction: column;
-  background-position: center;
-  background-size: cover;
-  background-repeat: no-repeat;
-  border-radius: 20px;
-  overflow: hidden;
+	z-index: 2;
+	position: absolute;
+	bottom: 100px;
+	left: 50px;
+	right: 50px;
+	top: 100px;
+	display: flex;
+	flex-direction: column;
+	background-position: center;
+	background-size: cover;
+	background-repeat: no-repeat;
+	border-radius: 20px;
+	overflow: hidden;
 `;
 
 // Default settings will come from package. This is for development purposes.
 const settings = {
-  language: {
-    label: 'English',
-    value: 'en',
-  },
-  theme: {
-    label: 'Theme name',
-    value: 'theme-name',
-  },
+	language: {
+		label: 'English',
+		value: 'en',
+	},
+	theme: {
+		label: 'Theme name',
+		value: 'theme-name',
+	},
 } as any;
 
 /*
@@ -67,24 +68,34 @@ const settings = {
  */
 
 const Root = () => {
-  if (import.meta.env.PROD) return null;
+	if (import.meta.env.PROD) return null;
 
-  return (
-    <HashRouter>
-      <RecoilRoot>
-        <React.Suspense fallback="LOOOOL">
-          <NuiProvider resource='mockapp'>
-            <Container>
-              <Background src={image} />
-              <AppContainer>
-                <App settings={settings} i18n={i18next} theme={createTheme(lightTheme)} />
-              </AppContainer>
-            </Container>
-          </NuiProvider>
-        </React.Suspense>
-      </RecoilRoot>
-    </HashRouter>
-  );
+	useEffect(() => {
+		if (process.env.NODE_ENV === 'development') {
+			document.documentElement.style.backgroundColor = 'black';
+		}
+	}, []);
+
+	return (
+		<HashRouter>
+			<RecoilRoot>
+				<React.Suspense fallback="LOOOOL">
+					<NuiProvider resource="npwd_BigDaddy_Weather">
+						<Container>
+							<Background src={image} />
+							<AppContainer>
+								<App
+									settings={settings}
+									i18n={i18next}
+									theme={createTheme(lightTheme)}
+								/>
+							</AppContainer>
+						</Container>
+					</NuiProvider>
+				</React.Suspense>
+			</RecoilRoot>
+		</HashRouter>
+	);
 };
 
 ReactDOM.render(<Root />, document.getElementById('root'));
